@@ -208,7 +208,11 @@ function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 var SCRIPT=null, DB=null;
 var S=null, REV=0, mode='load', canWrite=false, loaded=false, dbRef=null, dl=null, sync='load', writing=false, dirty=false;
 var myPerson=(function(){var v=lsGet(LS_PERSON);return (typeof v==='number'&&v>=0)?v:null})();
-function canTrade(){return myPerson!=null}
+function canTrade(){
+  if(myPerson==null) return false;
+  if(S&&(!S.cfg||!S.cfg.participants||myPerson>=S.cfg.participants.length)){clearMyPerson();return false}
+  return true;
+}
 function setMyPerson(t){myPerson=t;lsSet(LS_PERSON,t)}
 function clearMyPerson(){myPerson=null;try{localStorage.removeItem(LS_PERSON)}catch(e){}}
 var isHost=(function(){try{return localStorage.getItem(LS_HOST)==='1'}catch(e){return false}})();
