@@ -192,8 +192,7 @@ var pct=function(n){return (n>0?'+':n<0?'−':'')+Math.abs(n).toFixed(2)+'%'};
 var clock=function(ms){return new Date(ms).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})};
 var cls=function(n){return n>0?'up':n<0?'dn':''};
 var ord=function(n){return n===1?'1st':n===2?'2nd':n===3?'3rd':n+'th'};
-
-var LS_STATE='dsd-state-v5', LS_DRAFT='dsd-drafts-v5', LS_SCRIPT='dsd-script-v5', LS_MYTEAM='dsd-myteam-v5', LS_HOST='dsd-ishost-v5', DOC='game/v5', SDOC='secret/script';
+var LS_STATE='dsd-state-v6', LS_DRAFT='dsd-drafts-v6', LS_SCRIPT='dsd-script-v6', LS_PERSON='dsd-myperson-v6', LS_HOST='dsd-ishost-v6', DOC='game/v6', SDOC='secret/script';
 
 /* ---------- deployment config: fill these in before deploying ---------- */
 // 1. Create a free Firebase project at https://console.firebase.google.com,
@@ -201,25 +200,25 @@ var LS_STATE='dsd-state-v5', LS_DRAFT='dsd-drafts-v5', LS_SCRIPT='dsd-script-v5'
 var FIREBASE_CONFIG={apiKey:"AIzaSyDc-fLz_bzFKgKQ2Nz0V5paOc1lDWNNd8E",authDomain:"stock-market-simulator-5bcfc.firebaseapp.com",projectId:"stock-market-simulator-5bcfc",storageBucket:"stock-market-simulator-5bcfc.firebasestorage.app",messagingSenderId:"125357419986",appId:"1:125357419986:web:74125d2e305ddb6920ec0b"};
 // 2. Pick the passphrase the instructor types once per browser to get write access.
 var HOST_PASS="yeshashm528";
-var DEF={"rounds": [{"stock": {"sym": "ICICIBANK", "name": "ICICI Bank"}, "base": 1250, "steps": [{"h": "Markets open steady, loan growth looks healthy", "d": "Banking stocks trade calmly ahead of quarterly results. Analysts expect the bank to report steady loan growth and stable margins.", "pct": 4}, {"h": "Large corporate borrower defaults on its loans", "d": "News breaks that a big corporate borrower has missed repayments. The bank says it will set aside extra money to cover possible losses.", "pct": -6}, {"h": "Record quarterly profit and a special dividend", "d": "The bank reports its highest ever profit, with bad loans at a multi-year low. The board announces a special dividend for shareholders.", "pct": 18}, {"h": "Regulator restricts new credit card customers", "d": "The regulator finds compliance lapses and bars the bank from signing up new credit card customers until they are fixed.", "pct": -15}, {"h": "Government announces a large infrastructure plan", "d": "A big spending plan on roads, ports and housing is announced. Banks expect strong demand for new loans over the next year.", "pct": 9}, {"h": "Foreign investors sell Indian bank stocks", "d": "Rising US bond yields pull money out of emerging markets. Foreign investors sell banking shares across the board.", "pct": -8}, {"h": "New digital banking app signs millions of users", "d": "The bank launches a new app that adds millions of customers in weeks and cuts its running costs. Brokerages raise their targets.", "pct": 12}, {"h": "Festival season lifts retail loan demand", "d": "Home, car and personal loan applications jump during the festival season. The bank reports its best ever month for new loans.", "pct": 6}]}, {"stock": {"sym": "CIPLA", "name": "Cipla"}, "base": 1500, "steps": [{"h": "Seasonal demand for breathing medicines picks up", "d": "Cold weather and pollution raise demand for inhalers and respiratory drugs, which are among the company's biggest products.", "pct": 3}, {"h": "US regulator approves a complex generic inhaler", "d": "The USFDA clears the company's generic inhaler for the American market, where few rivals can match it. Analysts expect large sales.", "pct": 16}, {"h": "US inspectors flag problems at a key plant", "d": "A USFDA inspection of an important factory ends with serious observations. Shipments from the plant to the US may be delayed.", "pct": -12}, {"h": "Strong sales of long-term therapy medicines at home", "d": "Medicines for diabetes, heart and breathing problems sell well in India. The company says its domestic business grew faster than the market.", "pct": 7}, {"h": "Government cuts prices of essential medicines", "d": "The price regulator lowers the maximum price of several widely used drugs, including some the company sells in large volumes.", "pct": -15}, {"h": "A rival's patent expires and the company launches first", "d": "A blockbuster drug loses patent protection. The company is among the first to launch a cheaper generic and wins big orders.", "pct": 10}, {"h": "Raw material prices spike after supply disruption", "d": "A disruption in key supplier countries pushes up the cost of the chemicals used to make medicines. Profit margins are expected to shrink.", "pct": -9}, {"h": "Positive trial results for a new treatment", "d": "A new treatment the company has been developing succeeds in late-stage trials and a partner offers to fund its launch.", "pct": 18}, {"h": "US generic drug prices fall again", "d": "Large American buyers push for lower prices on generic medicines. Analysts cut profit forecasts for Indian drug makers.", "pct": -7}, {"h": "Quarterly results beat expectations", "d": "Profit and sales come in above forecasts across India, the US and Africa. Management raises its outlook for the year.", "pct": 5}]}]};
-var NSTEP=[8,10], ADV=5, TOP=3;
+var DEF={"stock":{"sym":"CIPLA","name":"Cipla"},"base":1500,"steps":[{"h":"Seasonal demand for breathing medicines picks up","d":"Cold weather and pollution raise demand for inhalers and respiratory drugs, which are among the company's biggest products.","pct":3},{"h":"US regulator approves a complex generic inhaler","d":"The USFDA clears the company's generic inhaler for the American market, where few rivals can match it. Analysts expect large sales.","pct":16},{"h":"US inspectors flag problems at a key plant","d":"A USFDA inspection of an important factory ends with serious observations. Shipments from the plant to the US may be delayed.","pct":-12},{"h":"Strong sales of long-term therapy medicines at home","d":"Medicines for diabetes, heart and breathing problems sell well in India. The company says its domestic business grew faster than the market.","pct":7},{"h":"Government cuts prices of essential medicines","d":"The price regulator lowers the maximum price of several widely used drugs, including some the company sells in large volumes.","pct":-15},{"h":"A rival's patent expires and the company launches first","d":"A blockbuster drug loses patent protection. The company is among the first to launch a cheaper generic and wins big orders.","pct":10},{"h":"Raw material prices spike after supply disruption","d":"A disruption in key supplier countries pushes up the cost of the chemicals used to make medicines. Profit margins are expected to shrink.","pct":-9},{"h":"Positive trial results for a new treatment","d":"A new treatment the company has been developing succeeds in late-stage trials and a partner offers to fund its launch.","pct":18},{"h":"US generic drug prices fall again","d":"Large American buyers push for lower prices on generic medicines. Analysts cut profit forecasts for Indian drug makers.","pct":-7},{"h":"Quarterly results beat expectations","d":"Profit and sales come in above forecasts across India, the US and Africa. Management raises its outlook for the year.","pct":5}]};
+var NSTEP=10;
 function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 
 var SCRIPT=null, DB=null;
 var S=null, REV=0, mode='load', canWrite=false, loaded=false, dbRef=null, dl=null, sync='load', writing=false, dirty=false;
-var myTeam=(function(){var v=lsGet(LS_MYTEAM);return (typeof v==='number'&&v>=0&&v<=8)?v:null})();
-function canTrade(){return myTeam!=null}
-function setMyTeam(t){myTeam=t;lsSet(LS_MYTEAM,t)}
-function clearMyTeam(){myTeam=null;try{localStorage.removeItem(LS_MYTEAM)}catch(e){}}
+var myPerson=(function(){var v=lsGet(LS_PERSON);return (typeof v==='number'&&v>=0)?v:null})();
+function canTrade(){return myPerson!=null}
+function setMyPerson(t){myPerson=t;lsSet(LS_PERSON,t)}
+function clearMyPerson(){myPerson=null;try{localStorage.removeItem(LS_PERSON)}catch(e){}}
 var isHost=(function(){try{return localStorage.getItem(LS_HOST)==='1'}catch(e){return false}})();
 function setHost(){isHost=true;try{localStorage.setItem(LS_HOST,'1')}catch(e){}}
-var ui={sel:null,fr:'all',fs:'all',ft:'all',csv:'',hostOpen:false};
+var ui={sel:null,fs:'all',ft:'all',csv:'',hostOpen:false};
 var drafts=lsGet(LS_DRAFT)||{};
-['setup','open','close','orders'].forEach(function(k){drafts[k]=drafts[k]||{}});
+['setup','orders'].forEach(function(k){drafts[k]=drafts[k]||{}});
+if(!Array.isArray(drafts.setup.participants)) drafts.setup.participants=[];
 function saveDrafts(){lsSet(LS_DRAFT,drafts)}
 function tab(){var h=location.hash.slice(1);return ({play:1,board:1,ledger:1,rules:1})[h]?h:'play'}
-var sk=function(ri){return S.cfg.stocks[ri]};
 
 /* ---------- game maths ---------- */
 function apply(open,cash,sh,row,cost){
@@ -235,14 +234,14 @@ function apply(open,cash,sh,row,cost){
   }
   return {d:d,q:status==='ok'?q:0,amt:amt,fee:fee,flow:d==='Buy'?-amt:d==='Sell'?amt:0,status:status,cashOpen:cOpen,cashClose:cash,shOpen:sOpen,shClose:sh,open:open};
 }
-function teamsOf(ri){return ri===0?[0,1,2,3,4,5,6,7,8]:S.rounds[0].cut.adv}
-function hist(t,ri){
-  var R=S.rounds[ri], rows=[], cash=S.cfg.capital, sh=0, cap=S.cfg.capital, trades=0, fees=0, lr=null;
-  for(var i=0;i<R.steps.length;i++){
-    var st=R.steps[i], o=st.orders[t];
+function allParticipants(){return S.cfg.participants.map(function(_,i){return i})}
+function hist(t){
+  var rows=[], cash=S.cfg.capital, sh=0, cap=S.cfg.capital, trades=0, fees=0, lr=null;
+  for(var i=0;i<S.steps.length;i++){
+    var st=S.steps[i], o=st.orders[t];
     if(!o){ if(st.closed) o={row:{d:'Hold',q:0,why:''},auto:true,at:st.closedAt}; else break; }
     var x=apply(st.open,cash,sh,o.row,S.cfg.cost);
-    x.ri=ri; x.step=i+1; x.why=o.auto?'Auto-hold: trading closed before this team locked':(o.row.why||''); x.at=o.at; x.auto=!!o.auto; x.scenario=st.scenario;
+    x.step=i+1; x.why=o.auto?'Auto-hold: trading closed before this person locked':(o.row.why||''); x.at=o.at; x.auto=!!o.auto; x.scenario=st.scenario;
     cash=x.cashClose; sh=x.shClose;
     if(x.d!=='Hold'&&x.status==='ok'){trades++;fees=r2(fees+x.fee)}
     x.close=st.close; x.pv=null; x.sv=null;
@@ -253,19 +252,19 @@ function hist(t,ri){
     scash:lr?lr.cashClose:cap,sshare:lr?lr.shClose:0,
     pv:lr?lr.pv:cap,pl:lr?r2(lr.pv-cap):0,ret:lr?(lr.pv-cap)/cap*100:0};
 }
-function doneSteps(ri){var n=0;S.rounds[ri].steps.forEach(function(s){if(s.close!=null)n++});return n}
-function standings(ri){
-  if(!S||ri>=S.rounds.length||!doneSteps(ri)) return null;
-  var rows=teamsOf(ri).map(function(t){var h=hist(t,ri);h.t=t;return h});
+function doneSteps(){var n=0;S.steps.forEach(function(s){if(s.close!=null)n++});return n}
+function standings(){
+  if(!S||!doneSteps()) return null;
+  var rows=allParticipants().map(function(t){var h=hist(t);h.t=t;return h});
   rows.sort(function(a,b){return b.pv-a.pv||b.scash-a.scash||a.t-b.t});
   rows.forEach(function(x,i){x.rank=i+1});
   return rows;
 }
 function stage(){
-  var ri=S.rounds.length-1, R=S.rounds[ri], n=R.steps.length, last=R.steps[n-1];
-  if(!last||(last.closed&&n<NSTEP[ri])) return {k:'open',ri:ri,i:n};
-  if(!last.closed) return {k:'trade',ri:ri,i:n-1};
-  return {k:ri===0?'cut':'final',ri:ri,i:n-1};
+  var n=S.steps.length, last=S.steps[n-1];
+  if(!last||(last.closed&&n<NSTEP)) return {k:'open',i:n};
+  if(!last.closed) return {k:'trade',i:n-1};
+  return {k:'final',i:n-1};
 }
 
 /* ---------- persistence ---------- */
@@ -294,41 +293,39 @@ async function flush(){
 
 /* ---------- views ---------- */
 function headHTML(){
-  var cells='', rt='', ri=0, N=NSTEP[0];
+  var cells='', rt='', N=NSTEP;
   if(S){
-    var sg=stage(); ri=sg.ri; N=NSTEP[ri];
+    var sg=stage(); N=NSTEP;
     for(var i=0;i<N;i++){
-      var st=S.rounds[ri].steps[i], done=st&&st.close!=null, on=((sg.k==='open'||sg.k==='trade'||sg.k==='close')&&sg.i===i);
-      cells+='<div class="stp'+(on?' on':done?' done':'')+'"><span>'+(done?'Done':on?'Now':'Step')+'</span><b>'+(i+1)+'</b></div>';
+      var st=S.steps[i], done=st&&st.close!=null, on=((sg.k==='open'||sg.k==='trade')&&sg.i===i);
+      cells+='<div class="stp'+(on?' on':done?' done':'')+'"><span>'+(done?'Done':on?'Now':'Day')+'</span><b>'+(i+1)+'</b></div>';
     }
-    rt='<p class="eyebrow rtag">Round '+(ri+1)+' of 2 · '+esc(sk(ri).sym)+' · '+teamsOf(ri).length+' teams · '+N+' steps</p>';
+    rt='<p class="eyebrow rtag">'+esc(S.cfg.stock.sym)+' · '+S.cfg.participants.length+' participants · '+N+' days</p>';
   }else{
-    for(var j=0;j<N;j++) cells+='<div class="stp"><span>Step</span><b>'+(j+1)+'</b></div>';
-    rt='<p class="eyebrow rtag">Round 1 · 9 teams · '+NSTEP[0]+' steps</p>';
+    for(var j=0;j<N;j++) cells+='<div class="stp"><span>Day</span><b>'+(j+1)+'</b></div>';
+    rt='<p class="eyebrow rtag">'+NSTEP+' days</p>';
   }
   var t=tab();
   var links=[['play','Play'],['board','Leaderboard'],['ledger','Ledger'],['rules','Rules']].map(function(x){return '<a href="#'+x[0]+'"'+(t===x[0]?' aria-current="page"':'')+'>'+x[1]+'</a>'}).join('');
-  var who=(!canWrite&&canTrade()&&S)?'<span class="pill">Playing as '+esc(S.cfg.teams[myTeam])+' · <a href="#" data-act="switch-team" style="color:inherit">switch team</a></span>':'';
-  return '<header class="top"><div><h1>Dalal Street Derby</h1><p class="eyebrow">9 teams → top 5 → top 3 win · every entry locks for good</p></div><span class="pill" id="sync">'+syncLabel()+'</span>'+who+'</header>'
-    +rt+'<div class="steps" style="grid-template-columns:repeat('+N+',minmax(0,1fr))" role="group" aria-label="Trading steps">'+cells+'</div><nav class="tabs" aria-label="Sections">'+links+'</nav>';
+  var who=(!canWrite&&canTrade()&&S)?'<span class="pill">Playing as '+esc(S.cfg.participants[myPerson])+' · <a href="#" data-act="switch-team" style="color:inherit">switch</a></span>':'';
+  return '<header class="top"><div><h1>Dalal Street Derby</h1><p class="eyebrow">One stock, '+NSTEP+' days · every entry locks for good</p></div><span class="pill" id="sync">'+syncLabel()+'</span>'+who+'</header>'
+    +rt+'<div class="steps" style="grid-template-columns:repeat('+N+',minmax(0,1fr))" role="group" aria-label="Trading days">'+cells+'</div><nav class="tabs" aria-label="Sections">'+links+'</nav>';
 }
 function seal(at,auto){return '<span class="seal">'+(auto?'Auto-hold ':'Locked ')+clock(at)+'</span>'}
 function ro(m){return '<p class="note">'+m+'</p>'}
 
 function stockRows(val){
-  return DEF.rounds.map(function(r,ri){
-    var rows=r.steps.map(function(s,i){
-      var k=ri+'_'+i;
-      return '<div class="srow"><b>Step '+(i+1)+'</b><div><label class="lbl" for="h'+k+'">Scenario headline</label><input id="h'+k+'" data-sf maxlength="90" autocomplete="off" value="'+val('h'+k,s.h)+'"></div>'
-        +'<div><label class="lbl" for="d'+k+'">What happened</label><textarea id="d'+k+'" data-sf maxlength="260" style="font:14px/1.4 var(--font-body);min-height:72px">'+val('d'+k,s.d)+'</textarea></div>'
-        +'<div><label class="lbl" for="g'+k+'">Price move (%)</label><input id="g'+k+'" data-sf inputmode="decimal" autocomplete="off" value="'+val('g'+k,s.pct)+'"></div></div>';
-    }).join('');
-    return '<div class="stack"><div><h3>Round '+(ri+1)+' stock and script</h3></div>'
-      +'<div class="grid"><div><label class="lbl" for="ss'+ri+'">Stock symbol</label><input id="ss'+ri+'" data-sf maxlength="14" autocomplete="off" value="'+val('ss'+ri,r.stock.sym)+'"></div>'
-      +'<div><label class="lbl" for="sn'+ri+'">Company</label><input id="sn'+ri+'" data-sf maxlength="40" autocomplete="off" value="'+val('sn'+ri,r.stock.name)+'"></div>'
-      +'<div><label class="lbl" for="bp'+ri+'">Starting price (₹)</label><input id="bp'+ri+'" data-sf inputmode="decimal" autocomplete="off" value="'+val('bp'+ri,r.base)+'"></div></div>'
-      +'<details class="scr"><summary>Scenario script, '+NSTEP[ri]+' steps (matches the Round '+(ri+1)+' slides)</summary>'+rows+'</details></div>';
+  var rows=DEF.steps.map(function(s,i){
+    var k='0_'+i;
+    return '<div class="srow"><b>Day '+(i+1)+'</b><div><label class="lbl" for="h'+k+'">Scenario headline</label><input id="h'+k+'" data-sf maxlength="90" autocomplete="off" value="'+val('h'+k,s.h)+'"></div>'
+      +'<div><label class="lbl" for="d'+k+'">What happened</label><textarea id="d'+k+'" data-sf maxlength="260" style="font:14px/1.4 var(--font-body);min-height:72px">'+val('d'+k,s.d)+'</textarea></div>'
+      +'<div><label class="lbl" for="g'+k+'">Price move (%)</label><input id="g'+k+'" data-sf inputmode="decimal" autocomplete="off" value="'+val('g'+k,s.pct)+'"></div></div>';
   }).join('');
+  return '<div class="stack"><div><h3>Stock and script</h3></div>'
+    +'<div class="grid"><div><label class="lbl" for="ss0">Stock symbol</label><input id="ss0" data-sf maxlength="14" autocomplete="off" value="'+val('ss0',DEF.stock.sym)+'"></div>'
+    +'<div><label class="lbl" for="sn0">Company</label><input id="sn0" data-sf maxlength="40" autocomplete="off" value="'+val('sn0',DEF.stock.name)+'"></div>'
+    +'<div><label class="lbl" for="bp0">Starting price (₹)</label><input id="bp0" data-sf inputmode="decimal" autocomplete="off" value="'+val('bp0',DEF.base)+'"></div></div>'
+    +'<details class="scr"><summary>Scenario script, '+NSTEP+' days (matches the slides)</summary>'+rows+'</details></div>';
 }
 function hostLoginHTML(){
   if(ui.hostOpen) return '<section class="panel stack"><div><h3>Instructor sign-in</h3><p class="lead">This only needs to happen once per device.</p></div>'
@@ -336,24 +333,27 @@ function hostLoginHTML(){
     +'<p class="msg" id="msg" role="alert"></p><div class="actions"><button class="btn pri" data-act="host-login">Sign in</button><button class="btn" data-act="host-cancel">Cancel</button></div></section>';
   return '<p class="eyebrow"><a href="#" data-act="host-open">I am the instructor</a></p>';
 }
-function teamPickHTML(){
-  var live=teamsOf(stage().ri);
-  var btns=S.cfg.teams.map(function(n,i){
-    var out=live.indexOf(i)<0;
-    return '<button class="tm'+(out?'':'')+'" data-act="'+(out?'noop':'pick-team')+'" data-t="'+i+'"'+(out?' disabled':'')+'><b>'+esc(n)+'</b><span>'+(out?'Eliminated':'Play as this team')+'</span></button>';
+function personPickHTML(){
+  var btns=S.cfg.participants.map(function(n,i){
+    return '<button class="tm" data-act="pick-team" data-t="'+i+'"><b>'+esc(n)+'</b><span>Play as this participant</span></button>';
   }).join('');
-  return '<section class="panel stack"><div><h2>Who are you?</h2><p class="lead">Pick your team to trade. You will only be able to submit orders for this team on this device.</p></div><div class="teams">'+btns+'</div>'+hostLoginHTML()+'</section>';
+  return '<section class="panel stack"><div><h2>Who are you?</h2><p class="lead">Pick your name to trade. You will only be able to submit orders for yourself on this device.</p></div><div class="teams">'+btns+'</div>'+hostLoginHTML()+'</section>';
 }
 function setupHTML(){
   if(!canWrite) return '<section class="panel stack"><h2>Waiting for the instructor</h2>'+ro('The game has not been started yet. This page updates by itself as soon as it begins.')+hostLoginHTML()+'</section>';
   var D=drafts.setup, val=function(id,def){return esc(D[id]!=null?D[id]:def)};
-  var teams=[0,1,2,3,4,5,6,7,8].map(function(i){return '<div><label class="lbl" for="t'+i+'">Team '+(i+1)+'</label><input id="t'+i+'" data-sf maxlength="24" autocomplete="off" value="'+val('t'+i,'Team '+(i+1))+'"></div>'}).join('');
-  return '<section class="panel stack"><div><h2>Set the table</h2><p class="lead">Fill this in once. After you press start, everything here is locked: team names, stocks, scenarios, capital and cost rate.</p></div>'
-    +'<div class="grid"><div><label class="lbl" for="cap">Starting capital per team (₹)</label><input id="cap" data-sf inputmode="numeric" autocomplete="off" value="'+val('cap','100000')+'"></div>'
+  var plist=drafts.setup.participants.map(function(n,i){
+    return '<div class="tm" style="flex-direction:row;align-items:center;justify-content:space-between"><b style="font:600 15px var(--font-body);text-transform:none">'+esc(n)+'</b><button class="btn" data-act="remove-participant" data-t="'+i+'" type="button" style="min-height:32px;padding:4px 10px">Remove</button></div>';
+  }).join('');
+  var plistWrap=plist?'<div class="stack" style="gap:8px">'+plist+'</div>':'<p class="lead">No participants added yet.</p>';
+  return '<section class="panel stack"><div><h2>Set the table</h2><p class="lead">Fill this in once. After you press start, everything here is locked: participants, the stock, scenarios, capital and cost rate.</p></div>'
+    +'<div class="grid"><div><label class="lbl" for="cap">Starting capital per participant (₹)</label><input id="cap" data-sf inputmode="numeric" autocomplete="off" value="'+val('cap','100000')+'"></div>'
     +'<div><label class="lbl" for="cost">Transaction cost per trade (%)</label><input id="cost" data-sf inputmode="decimal" autocomplete="off" value="'+val('cost','0')+'"></div></div>'
-    +'<div><h3>How prices work</h3><p class="lead">Each step has a scenario with a price move. The opening price is the last closing price (step 1 uses the starting price). Teams only see the scenario text. When you close trading, the closing price is worked out from the hidden move and shown to everyone. The moves are kept private to the instructor until then.</p></div>'
+    +'<div><h3>How prices work</h3><p class="lead">Each day has a scenario with a price move. The opening price is the previous closing price (day 1 uses the starting price). Participants only see the scenario text. When you close trading, the closing price is worked out from the hidden move and shown to everyone. The moves are kept private to the instructor until then.</p></div>'
     +stockRows(val)
-    +'<div><h3>Nine teams</h3><p class="lead">Names lock when the game starts.</p></div><div class="grid">'+teams+'</div>'
+    +'<div><h3>Participants</h3><p class="lead">Add each participant by name. The list locks when the game starts.</p></div>'
+    +plistWrap
+    +'<div class="grid"><div><label class="lbl" for="pname">Participant name</label><input id="pname" autocomplete="off" maxlength="24" placeholder="e.g. Asha Rao"></div><div style="align-self:flex-end"><button class="btn" data-act="add-participant" type="button">Add participant</button></div></div>'
     +'<p class="msg" id="msg" role="alert"></p><div class="actions"><button class="btn pri" data-act="start" data-confirm="Tap again to lock setup for good">Start the game</button></div></section>';
 }
 function readSetup(){
@@ -361,42 +361,37 @@ function readSetup(){
   var capital=Number(v('cap').replace(/,/g,'')), costPct=Number(v('cost'));
   if(!(capital>=1000)) return {error:'Starting capital must be at least ₹1,000.'};
   if(!(costPct>=0&&costPct<=5)) return {error:'Transaction cost must be between 0% and 5%.'};
-  var teams=[0,1,2,3,4,5,6,7,8].map(function(i){return v('t'+i)});
-  if(teams.some(function(x){return !x})) return {error:'Give all 9 teams a name.'};
-  if(new Set(teams.map(function(x){return x.toLowerCase()})).size<9) return {error:'Team names must all be different.'};
-  var stocks=[], base=[], script=[];
-  for(var ri=0;ri<2;ri++){
-    var sy=v('ss'+ri).toUpperCase().replace(/\s+/g,''), nm=v('sn'+ri), bp=Number(v('bp'+ri).replace(/,/g,''));
-    if(!sy||!nm) return {error:'Fill in the symbol and company for the Round '+(ri+1)+' stock.'};
-    if(!(bp>0)) return {error:'Enter a starting price above ₹0 for Round '+(ri+1)+'.'};
-    stocks.push({sym:sy,name:nm}); base.push(r2(bp));
-    var rows=[];
-    for(var i=0;i<NSTEP[ri];i++){
-      var k=ri+'_'+i, h=v('h'+k), d=v('d'+k), g=Number(v('g'+k));
-      if(!h||!d) return {error:'Round '+(ri+1)+' step '+(i+1)+' needs a headline and a description.'};
-      if(v('g'+k)===''||!isFinite(g)||g<=-90||g>200) return {error:'Round '+(ri+1)+' step '+(i+1)+': enter a price move between −90 and 200.'};
-      rows.push({h:h,d:d,pct:g});
-    }
-    script.push(rows);
+  var participants=drafts.setup.participants.slice();
+  if(participants.length<1) return {error:'Add at least one participant.'};
+  if(new Set(participants.map(function(x){return x.toLowerCase()})).size<participants.length) return {error:'Participant names must all be different.'};
+  var sy=v('ss0').toUpperCase().replace(/\s+/g,''), nm=v('sn0'), bp=Number(v('bp0').replace(/,/g,''));
+  if(!sy||!nm) return {error:'Fill in the stock symbol and company.'};
+  if(!(bp>0)) return {error:'Enter a starting price above ₹0.'};
+  var script=[];
+  for(var i=0;i<NSTEP;i++){
+    var k='0_'+i, h=v('h'+k), d=v('d'+k), g=Number(v('g'+k));
+    if(!h||!d) return {error:'Day '+(i+1)+' needs a headline and a description.'};
+    if(v('g'+k)===''||!isFinite(g)||g<=-90||g>200) return {error:'Day '+(i+1)+': enter a price move between −90 and 200.'};
+    script.push({h:h,d:d,pct:g});
   }
-  return {cfg:{capital:r2(capital),cost:costPct/100,teams:teams,stocks:stocks,base:base,startedAt:Date.now()},script:script};
+  return {cfg:{capital:r2(capital),cost:costPct/100,participants:participants,stock:{sym:sy,name:nm},base:r2(bp),startedAt:Date.now()},script:script};
 }
 
-function priceStrip(ri,i){
-  var st=S.rounds[ri].steps[i], sc=st.scenario, done=st.closed, mv=done?(st.close/st.open-1)*100:0;
-  return '<div class="scn"><div class="bigpx"><span class="eyebrow">Round '+(ri+1)+' · Step '+(i+1)+' · '+esc(sk(ri).sym)+' opens at</span><b class="mono">'+inr(st.open)+'</b>'
+function priceStrip(i){
+  var st=S.steps[i], sc=st.scenario, done=st.closed, mv=done?(st.close/st.open-1)*100:0;
+  return '<div class="scn"><div class="bigpx"><span class="eyebrow">Day '+(i+1)+' · '+esc(S.cfg.stock.sym)+' opens at</span><b class="mono">'+inr(st.open)+'</b>'
     +(done?'<span class="eyebrow">closes at</span><b class="mono '+cls(mv)+'">'+inr(st.close)+'</b><span class="pill mono '+cls(mv)+'">'+pct(mv)+'</span>':'<span class="eyebrow">Closing price is revealed when trading closes</span>')+'</div>'
     +'<p><b>'+esc(sc.h)+'</b></p><p style="font-size:14px;color:var(--muted)">'+esc(sc.d)+'</p></div>';
 }
-function openHTML(ri,i){
-  var prev=i>0?priceStrip(ri,i-1):'';
-  if(!canWrite) return prev+ro('Waiting for the instructor to start step '+(i+1)+'. The scenario and opening price will appear here.');
-  var open=i===0?S.cfg.base[ri]:S.rounds[ri].steps[i-1].close;
-  var warn=SCRIPT?'':'<p class="note">The scenario script is not loaded in this browser, so this step cannot start here. Open the game on the instructor’s own computer.</p>';
-  return prev+'<div class="panel stack"><div><h3>Ready for step '+(i+1)+'?</h3><p class="lead">Starting the step shows the scenario and the opening price ('+inr(open)+') to everyone. Read the scenario out to the class. The closing price stays hidden until you close trading.</p></div>'+warn
-    +'<p class="msg" id="msg" role="alert"></p><div class="actions"><button class="btn pri" data-act="start-step" data-confirm="Tap again to start this step"'+(SCRIPT?'':' disabled')+'>Start step '+(i+1)+'</button></div></div>';
+function openHTML(i){
+  var prev=i>0?priceStrip(i-1):'';
+  if(!canWrite) return prev+ro('Waiting for the instructor to start day '+(i+1)+'. The scenario and opening price will appear here.');
+  var open=i===0?S.cfg.base:S.steps[i-1].close;
+  var warn=SCRIPT?'':'<p class="note">The scenario script is not loaded in this browser, so this day cannot start here. Open the game on the instructor’s own computer.</p>';
+  return prev+'<div class="panel stack"><div><h3>Ready for day '+(i+1)+'?</h3><p class="lead">Starting the day shows the scenario and the opening price ('+inr(open)+') to everyone. Read the scenario out to the class. The closing price stays hidden until you close trading.</p></div>'+warn
+    +'<p class="msg" id="msg" role="alert"></p><div class="actions"><button class="btn pri" data-act="start-step" data-confirm="Tap again to start this day"'+(SCRIPT?'':' disabled')+'>Start day '+(i+1)+'</button></div></div>';
 }
-function getDraft(ri,i,t){var k=ri+':'+i+':'+t;if(!drafts.orders[k])drafts.orders[k]={d:'Hold',q:'',why:''};return drafts.orders[k]}
+function getDraft(i,t){var k=i+':'+t;if(!drafts.orders[k])drafts.orders[k]={d:'Hold',q:'',why:''};return drafts.orders[k]}
 
 function calcHTML(x){
   var mb=Math.max(0,Math.floor(x.cashOpen/(x.open*(1+S.cfg.cost))));
@@ -405,178 +400,146 @@ function calcHTML(x){
   if(x.d==='Hold') return 'No trade · cash stays '+inr(x.cashClose)+' · shares held '+num(x.shClose)+hint;
   return x.d+' '+num(x.q)+' × '+inr(x.open)+' = '+inr(x.amt)+(x.fee?' + cost '+inr(x.fee):'')+' · cash after '+inr(x.cashClose)+' · shares after '+num(x.shClose);
 }
-function legEdit(ri,row,x){
+function legEdit(row,x){
   var seg=['Buy','Sell','Hold'].map(function(d){return '<label class="'+d.toLowerCase()+'"><input type="radio" name="dec" value="'+d+'" data-dec'+(row.d===d?' checked':'')+'>'+d+'</label>'}).join('');
-  return '<div class="leg one"><div class="who"><b>'+esc(sk(ri).sym)+'</b><span>'+esc(sk(ri).name)+'</span><span class="px">Opening '+inr(x.open)+'</span></div>'
+  return '<div class="leg one"><div class="who"><b>'+esc(S.cfg.stock.sym)+'</b><span>'+esc(S.cfg.stock.name)+'</span><span class="px">Opening '+inr(x.open)+'</span></div>'
     +'<div><span class="lbl" id="dlab">Decision</span><div class="seg" role="radiogroup" aria-labelledby="dlab">'+seg+'</div></div>'
     +'<div><label class="lbl" for="q">Quantity</label><input id="q" data-qty inputmode="numeric" autocomplete="off" placeholder="0" value="'+esc(row.q)+'"'+(row.d==='Hold'?' disabled':'')+'></div>'
     +'<div><label class="lbl" for="w">Reason (optional)</label><input id="w" data-why maxlength="140" autocomplete="off" placeholder="Why this call?" value="'+esc(row.why||'')+'"></div>'
     +'<div class="calc" id="calc">'+calcHTML(x)+'</div></div>';
 }
-function legLocked(ri,x,why){
+function legLocked(x,why){
   var tag=x.d==='Hold'?'hold':x.d==='Buy'?'good':'bad';
-  return '<div class="leg done"><div class="who"><b>'+esc(sk(ri).sym)+'</b><span>Opening '+inr(x.open)+'</span></div><div class="calc"><span class="tag '+tag+'">'+x.d+(x.q?' '+num(x.q):'')+'</span> '
+  return '<div class="leg done"><div class="who"><b>'+esc(S.cfg.stock.sym)+'</b><span>Opening '+inr(x.open)+'</span></div><div class="calc"><span class="tag '+tag+'">'+x.d+(x.q?' '+num(x.q):'')+'</span> '
     +(x.d==='Hold'?'No trade':'Amount '+inr(x.amt)+(x.fee?' · cost '+inr(x.fee):''))+' · cash after '+inr(x.cashClose)+' · shares '+num(x.shClose)+(why?'<br>Reason: '+esc(why):'')+'</div></div>';
 }
-function histTable(t,ri){
-  var h=hist(t,ri); if(!h.rows.length) return '';
+function histTable(t){
+  var h=hist(t); if(!h.rows.length) return '';
   var body=h.rows.map(function(x){
     return '<tr><td>'+x.step+'</td><td class="n">'+inr(x.open)+'</td><td class="n">'+(x.close==null?'—':inr(x.close))+'</td><td><span class="tag '+(x.d==='Buy'?'good':x.d==='Sell'?'bad':'hold')+'">'+x.d+'</span></td><td class="n">'+num(x.q)+'</td><td class="n">'+(x.flow?sgn(x.flow):'0')+'</td><td class="n">'+inr(x.cashOpen)+'</td><td class="n">'+inr(x.cashClose)+'</td><td class="n">'+num(x.shOpen)+'</td><td class="n">'+num(x.shClose)+'</td><td class="n"><b>'+(x.pv==null?'—':inr(x.pv))+'</b></td></tr>';
   }).join('');
-  return '<div><h3 style="margin-bottom:6px">'+esc(S.cfg.teams[t])+' · step by step</h3><div class="scroll"><table class="tbl"><thead><tr><th>Step</th><th class="n">Opening</th><th class="n">Closing</th><th>Decision</th><th class="n">Qty</th><th class="n">Amount</th><th class="n">Money open</th><th class="n">Money close</th><th class="n">Shares open</th><th class="n">Shares close</th><th class="n">Portfolio</th></tr></thead><tbody>'+body+'</tbody></table></div></div>';
+  return '<div><h3 style="margin-bottom:6px">'+esc(S.cfg.participants[t])+' · day by day</h3><div class="scroll"><table class="tbl"><thead><tr><th>Day</th><th class="n">Opening</th><th class="n">Closing</th><th>Decision</th><th class="n">Qty</th><th class="n">Amount</th><th class="n">Money open</th><th class="n">Money close</th><th class="n">Shares open</th><th class="n">Shares close</th><th class="n">Portfolio</th></tr></thead><tbody>'+body+'</tbody></table></div></div>';
 }
-function ticketHTML(ri,i,t){
-  var st=S.rounds[ri].steps[i], o=st.orders[t], h=hist(t,ri), x, row;
+function ticketHTML(i,t){
+  var st=S.steps[i], o=st.orders[t], h=hist(t), x, row;
   if(o){ x=h.rows[i]; row=o.row }
-  else { row=getDraft(ri,i,t); x=apply(st.open,h.cash,h.sh,row,S.cfg.cost) }
-  var mine=canWrite||(canTrade()&&t===myTeam);
-  var leg=o?legLocked(ri,x,o.row.why):(mine?legEdit(ri,row,x):'');
-  var foot=o?'':(mine?'<p class="msg" id="msg" role="alert"></p><div class="actions"><button class="btn pri" id="lockbtn" data-act="lock-orders" data-t="'+t+'" data-confirm="Tap again to lock these orders for good"'+(x.status==='ok'?'':' disabled')+'>Lock orders for '+esc(S.cfg.teams[t])+'</button><span class="eyebrow">Choose Hold to skip this step</span></div>':ro('This team has not locked its orders yet.'));
-  return '<div class="ticket"><div class="thead"><h2>'+esc(S.cfg.teams[t])+'</h2>'+(o?seal(o.at,o.auto):'<span class="eyebrow">Order ticket · open</span>')+'</div>'
+  else { row=getDraft(i,t); x=apply(st.open,h.cash,h.sh,row,S.cfg.cost) }
+  var mine=canWrite||(canTrade()&&t===myPerson);
+  var leg=o?legLocked(x,o.row.why):(mine?legEdit(row,x):'');
+  var foot=o?'':(mine?'<p class="msg" id="msg" role="alert"></p><div class="actions"><button class="btn pri" id="lockbtn" data-act="lock-orders" data-t="'+t+'" data-confirm="Tap again to lock this order for good"'+(x.status==='ok'?'':' disabled')+'>Lock order for '+esc(S.cfg.participants[t])+'</button><span class="eyebrow">Choose Hold to skip this day</span></div>':ro('This participant has not locked their order yet.'));
+  return '<div class="ticket"><div class="thead"><h2>'+esc(S.cfg.participants[t])+'</h2>'+(o?seal(o.at,o.auto):'<span class="eyebrow">Order ticket · open</span>')+'</div>'
     +'<p class="cashline">Cash <b>'+inr(h.cash)+'</b> · shares held <b>'+num(h.sh)+'</b> · cash after this order <b id="cashafter">'+inr(x.cashClose)+'</b></p>'+leg+foot+'</div>';
 }
-function tradingHTML(ri,i){
-  var st=S.rounds[ri].steps[i], teams=teamsOf(ri), n=teams.length, done=teams.filter(function(t){return st.orders[t]}).length;
+function tradingHTML(i){
+  var st=S.steps[i], teams=allParticipants(), n=teams.length, done=teams.filter(function(t){return st.orders[t]}).length;
   if(!canWrite&&canTrade()){
-    var mt=myTeam;
-    if(teams.indexOf(mt)<0) return priceStrip(ri,i)+ro(esc(S.cfg.teams[mt])+' was eliminated in Round 1 and is not trading this round.');
-    return '<div class="stack">'+priceStrip(ri,i)+'<div class="panel stack"><div class="head"><h3>Order desk · step '+(i+1)+'</h3><span class="mono" style="font-size:13px">'+done+' of '+n+' teams locked</span></div>'
-      +'<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+n+'" aria-valuenow="'+done+'"><i style="width:'+(done/n*100)+'%"></i></div>'+ticketHTML(ri,i,mt)+histTable(mt,ri)+'</div></div>';
+    var mt=myPerson;
+    return '<div class="stack">'+priceStrip(i)+'<div class="panel stack"><div class="head"><h3>Order desk · day '+(i+1)+'</h3><span class="mono" style="font-size:13px">'+done+' of '+n+' locked</span></div>'
+      +'<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+n+'" aria-valuenow="'+done+'"><i style="width:'+(done/n*100)+'%"></i></div>'+ticketHTML(i,mt)+histTable(mt)+'</div></div>';
   }
   if(ui.sel==null||teams.indexOf(ui.sel)<0){var f=teams.filter(function(t){return !st.orders[t]})[0];ui.sel=f!=null?f:teams[0]}
-  var btns=teams.map(function(t){var o=st.orders[t];return '<button class="tm'+(o?' done':'')+(t===ui.sel?' sel':'')+'" data-act="sel" data-t="'+t+'"><b>'+esc(S.cfg.teams[t])+'</b><span>'+(o?(o.auto?'Auto-hold':'Locked '+clock(o.at)):'Not locked')+'</span></button>'}).join('');
-  var close=canWrite?'<div class="actions"><button class="btn pri" data-act="close-trading" data-confirm="Tap again to close trading and reveal the closing price"'+(SCRIPT?'':' disabled')+'>Close trading and reveal closing price</button><span class="eyebrow">Teams that have not locked are recorded as Hold</span></div>':'';
-  return '<div class="stack">'+priceStrip(ri,i)+'<div class="panel stack"><div class="head"><h3>Order desk · step '+(i+1)+'</h3><span class="mono" style="font-size:13px">'+done+' of '+n+' teams locked</span></div>'
-    +'<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+n+'" aria-valuenow="'+done+'"><i style="width:'+(done/n*100)+'%"></i></div><div class="teams">'+btns+'</div>'+ticketHTML(ri,i,ui.sel)+histTable(ui.sel,ri)+close+'</div></div>';
+  var btns=teams.map(function(t){var o=st.orders[t];return '<button class="tm'+(o?' done':'')+(t===ui.sel?' sel':'')+'" data-act="sel" data-t="'+t+'"><b>'+esc(S.cfg.participants[t])+'</b><span>'+(o?(o.auto?'Auto-hold':'Locked '+clock(o.at)):'Not locked')+'</span></button>'}).join('');
+  var close=canWrite?'<div class="actions"><button class="btn pri" data-act="close-trading" data-confirm="Tap again to close trading and reveal the closing price"'+(SCRIPT?'':' disabled')+'>Close trading and reveal closing price</button><span class="eyebrow">Anyone who has not locked is recorded as Hold</span></div>':'';
+  return '<div class="stack">'+priceStrip(i)+'<div class="panel stack"><div class="head"><h3>Order desk · day '+(i+1)+'</h3><span class="mono" style="font-size:13px">'+done+' of '+n+' locked</span></div>'
+    +'<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+n+'" aria-valuenow="'+done+'"><i style="width:'+(done/n*100)+'%"></i></div><div class="teams">'+btns+'</div>'+ticketHTML(i,ui.sel)+histTable(ui.sel)+close+'</div></div>';
 }
 
-function resultTag(ri,x,mode){
-  if(mode==='final') return x.rank<=TOP?'<span class="tag good">'+ord(x.rank)+'</span>':'<span class="tag hold">—</span>';
-  if(mode==='cut'){
-    var cut=S.rounds[0].cut;
-    if(cut) return cut.adv.indexOf(x.t)>=0?'<span class="tag good">Advances</span>':'<span class="tag bad">Eliminated</span>';
-    return x.rank<=ADV?'<span class="tag good">Top 5</span>':'<span class="tag bad">Below the line</span>';
-  }
-  return '';
-}
-function standTable(rows,ri,mode){
+function standTable(rows){
   var body=rows.map(function(x){
-    var cutrow=ri===0&&mode==='cut'&&(S.rounds[0].cut?S.rounds[0].cut.out.indexOf(x.t)>=0:x.rank>ADV);
-    return '<tr'+(cutrow?' class="cut"':'')+'><td class="rk">'+x.rank+'</td><td class="tn">'+esc(S.cfg.teams[x.t])+'<small>'+num(x.sshare)+' shares</small></td><td class="n">'+inr(x.scash)+'</td><td class="n">'+inr(x.last.sv)+'</td><td class="n"><b>'+inr(x.pv)+'</b></td><td class="n '+cls(x.pl)+'">'+sgn(x.pl)+'</td><td class="n '+cls(x.ret)+'">'+pct(x.ret)+'</td><td class="n">'+x.trades+'</td>'+(mode?'<td>'+resultTag(ri,x,mode)+'</td>':'')+'</tr>';
+    return '<tr><td class="rk">'+x.rank+'</td><td class="tn">'+esc(S.cfg.participants[x.t])+'<small>'+num(x.sshare)+' shares</small></td><td class="n">'+inr(x.scash)+'</td><td class="n">'+inr(x.last.sv)+'</td><td class="n"><b>'+inr(x.pv)+'</b></td><td class="n '+cls(x.pl)+'">'+sgn(x.pl)+'</td><td class="n '+cls(x.ret)+'">'+pct(x.ret)+'</td><td class="n">'+x.trades+'</td></tr>';
   }).join('');
-  return '<div class="scroll"><table class="tbl"><thead><tr><th>#</th><th>Team</th><th class="n">Cash</th><th class="n">Shares value</th><th class="n">Portfolio</th><th class="n">Profit / loss</th><th class="n">Return</th><th class="n">Trades</th>'+(mode?'<th>Result</th>':'')+'</tr></thead><tbody>'+body+'</tbody></table></div>';
+  return '<div class="scroll"><table class="tbl"><thead><tr><th>#</th><th>Participant</th><th class="n">Cash</th><th class="n">Shares value</th><th class="n">Portfolio</th><th class="n">Profit / loss</th><th class="n">Return</th><th class="n">Trades</th></tr></thead><tbody>'+body+'</tbody></table></div>';
 }
-function podiumHTML(rows){
-  var pod=function(x,c){return '<div class="pod p'+c+'"><div class="num">'+c+'</div><div class="eyebrow">'+ord(c)+' place</div><div class="nm">'+esc(S.cfg.teams[x.t])+'</div><div class="pv">'+inr(x.pv)+'</div><div class="pv '+cls(x.ret)+'">'+pct(x.ret)+'</div></div>'};
-  return '<div class="podium">'+pod(rows[1],2)+pod(rows[0],1)+pod(rows[2],3)+'</div>';
-}
-function byStep(rows,ri){
-  var N=doneSteps(ri); if(N<2) return '';
-  var head='<th>Team</th>'; for(var i=1;i<=N;i++) head+='<th class="n">S'+i+'</th>';
+function byStep(rows){
+  var N=doneSteps(); if(N<2) return '';
+  var head='<th>Participant</th>'; for(var i=1;i<=N;i++) head+='<th class="n">D'+i+'</th>';
   var body=rows.map(function(x){
-    var c='<td class="tn">'+esc(S.cfg.teams[x.t])+'</td>';
+    var c='<td class="tn">'+esc(S.cfg.participants[x.t])+'</td>';
     for(var i=0;i<N;i++){var r=x.rows[i];c+='<td class="n">'+(r&&r.pv!=null?num(Math.round(r.pv)):'—')+'</td>'}
     return '<tr>'+c+'</tr>';
   }).join('');
-  return '<div><h3 style="margin-bottom:6px">Round '+(ri+1)+' portfolio value after each step (₹)</h3><div class="scroll"><table class="tbl"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div></div>';
+  return '<div><h3 style="margin-bottom:6px">Portfolio value after each day (₹)</h3><div class="scroll"><table class="tbl"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div></div>';
 }
-function reviewHTML(rows,ri){
+function reviewHTML(rows){
   var body=rows.map(function(x){
     var prev=S.cfg.capital,best=null,worst=null;
     x.rows.forEach(function(r){if(r.pv==null)return;var d=r2(r.pv-prev);prev=r.pv;if(!best||d>best.d)best={d:d,s:r.step};if(!worst||d<worst.d)worst={d:d,s:r.step}});
     var holds=x.rows.filter(function(r){return r.d==='Hold'}).length;
-    return '<tr><td class="tn">'+esc(S.cfg.teams[x.t])+'</td><td class="n">'+x.trades+'</td><td class="n">'+holds+'</td><td class="n">'+inr(x.fees)+'</td><td class="n '+cls(best?best.d:0)+'">'+(best?sgn(best.d)+' (step '+best.s+')':'—')+'</td><td class="n '+cls(worst?worst.d:0)+'">'+(worst?sgn(worst.d)+' (step '+worst.s+')':'—')+'</td></tr>';
+    return '<tr><td class="tn">'+esc(S.cfg.participants[x.t])+'</td><td class="n">'+x.trades+'</td><td class="n">'+holds+'</td><td class="n">'+inr(x.fees)+'</td><td class="n '+cls(best?best.d:0)+'">'+(best?sgn(best.d)+' (day '+best.s+')':'—')+'</td><td class="n '+cls(worst?worst.d:0)+'">'+(worst?sgn(worst.d)+' (day '+worst.s+')':'—')+'</td></tr>';
   }).join('');
-  return '<div><h3 style="margin-bottom:6px">Round '+(ri+1)+' performance review</h3><div class="scroll"><table class="tbl"><thead><tr><th>Team</th><th class="n">Trades</th><th class="n">Holds</th><th class="n">Costs paid</th><th class="n">Best step</th><th class="n">Worst step</th></tr></thead><tbody>'+body+'</tbody></table></div></div>';
+  return '<div><h3 style="margin-bottom:6px">Performance review</h3><div class="scroll"><table class="tbl"><thead><tr><th>Participant</th><th class="n">Trades</th><th class="n">Holds</th><th class="n">Costs paid</th><th class="n">Best day</th><th class="n">Worst day</th></tr></thead><tbody>'+body+'</tbody></table></div></div>';
 }
-function logHTML(ri){
-  var rows=S.rounds[ri].steps.filter(function(s){return s.closed}).map(function(st,i){
+function logHTML(){
+  var rows=S.steps.filter(function(s){return s.closed}).map(function(st,i){
     var mv=(st.close/st.open-1)*100;
     return '<tr><td>'+(i+1)+'</td><td style="min-width:240px"><b>'+esc(st.scenario.h)+'</b><br><span style="color:var(--muted);font-size:13px">'+esc(st.scenario.d)+'</span></td><td class="n">'+inr(st.open)+'</td><td class="n">'+inr(st.close)+'</td><td class="n '+cls(mv)+'"><b>'+pct(mv)+'</b></td></tr>';
   }).join('');
   if(!rows) return '';
-  return '<div><h3 style="margin-bottom:6px">Round '+(ri+1)+' scenario log · '+esc(sk(ri).sym)+'</h3><div class="scroll"><table class="tbl"><thead><tr><th>Step</th><th>Scenario</th><th class="n">Opening</th><th class="n">Closing</th><th class="n">Move</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
-}
-function cutBanner(){
-  var c=S.rounds[0].cut, nm=function(a){return a.map(function(t){return esc(S.cfg.teams[t])}).join(', ')};
-  return '<p class="note"><b>Finalists:</b> '+nm(c.adv)+'.<br><b>Eliminated in round 1:</b> '+nm(c.out)+'.</p>';
-}
-function cutHTML(){
-  var rows=standings(0);
-  return '<div class="stack"><div class="panel stack"><div><h2>Round 1 results</h2><p class="lead">The top 5 teams by portfolio value go through to Round 2. The bottom 4 are eliminated. Ties go to higher cash, then lower team number.</p></div>'+standTable(rows,0,'cut')
-    +(canWrite?'<div class="actions"><button class="btn pri" data-act="announce" data-confirm="Tap again to lock the five finalists">Announce the five finalists</button><span class="eyebrow">Locks the cut and opens Round 2</span></div>':ro('The instructor will announce the finalists next.'))+'</div>'+byStep(rows,0)+logHTML(0)+'</div>';
+  return '<div><h3 style="margin-bottom:6px">Scenario log · '+esc(S.cfg.stock.sym)+'</h3><div class="scroll"><table class="tbl"><thead><tr><th>Day</th><th>Scenario</th><th class="n">Opening</th><th class="n">Closing</th><th class="n">Move</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
 }
 function finalHTML(){
-  var rows=standings(1);
-  return '<div class="stack"><div class="panel stack"><div><h2>Final result</h2><p class="lead">Both rounds are closed. The top three portfolios in Round 2 win. Ties go to higher cash, then lower team number.</p></div>'+podiumHTML(rows)+'</div>'
-    +standTable(rows,1,'final')+byStep(rows,1)+logHTML(1)+reviewHTML(rows,1)+logHTML(0)+'<div class="actions"><button class="btn pri" data-act="csv">Download all decisions (CSV)</button></div><p class="msg" id="msg" role="status"></p></div>';
+  var rows=standings();
+  return '<div class="stack"><div class="panel stack"><div><h2>Final results</h2><p class="lead">Trading is closed. Ranked by final portfolio value. Ties go to higher cash, then whoever was added first.</p></div>'
+    +standTable(rows)+'</div>'+byStep(rows)+logHTML()+reviewHTML(rows)+'<div class="actions"><button class="btn pri" data-act="csv">Download all decisions (CSV)</button></div><p class="msg" id="msg" role="status"></p></div>';
 }
-function lastStepNote(ri){
-  var d=doneSteps(ri); if(!d) return '';
-  var rows=standings(ri), top=rows.slice(0,ri===0?ADV:TOP).map(function(x){return ord(x.rank)+' '+esc(S.cfg.teams[x.t])+' '+inr(x.pv)}).join(' · ');
-  return '<p class="note"><b>After step '+d+':</b> '+top+'. <a href="#board">Full leaderboard</a></p>';
+function lastStepNote(){
+  var d=doneSteps(); if(!d) return '';
+  var rows=standings(), top=rows.slice(0,3).map(function(x){return ord(x.rank)+' '+esc(S.cfg.participants[x.t])+' '+inr(x.pv)}).join(' · ');
+  return '<p class="note"><b>After day '+d+':</b> '+top+'. <a href="#board">Full leaderboard</a></p>';
 }
 function playHTML(){
   if(!loaded) return '<section class="panel"><p class="lead">Opening the exchange…</p></section>';
   if(!S) return setupHTML();
-  if(!canWrite&&!canTrade()) return teamPickHTML();
-  var sg=stage(), ri=sg.ri, h;
+  if(!canWrite&&!canTrade()) return personPickHTML();
+  var sg=stage(), h;
   if(sg.k==='final') return finalHTML();
-  if(sg.k==='cut') return cutHTML();
-  var tags={open:'Ready to start the step',trade:'Teams are trading'};
-  if(sg.k==='open') h=(ri===1&&sg.i===0?cutBanner():'')+lastStepNote(ri)+openHTML(ri,sg.i);
-  else h=tradingHTML(ri,sg.i);
-  return '<div class="stack"><div class="head"><h2>Round '+(ri+1)+' · Step '+(sg.i+1)+' of '+NSTEP[ri]+'</h2><span class="eyebrow">'+tags[sg.k]+'</span></div>'+h+'</div>';
+  var tags={open:'Ready to start the day',trade:'Trading is open'};
+  if(sg.k==='open') h=lastStepNote()+openHTML(sg.i);
+  else h=tradingHTML(sg.i);
+  return '<div class="stack"><div class="head"><h2>Day '+(sg.i+1)+' of '+NSTEP+'</h2><span class="eyebrow">'+tags[sg.k]+'</span></div>'+h+'</div>';
 }
 function boardHTML(){
   if(!loaded||!S) return '<section class="panel"><p class="lead">Standings appear once the game starts and the first closing price is locked.</p></section>';
-  var sg=stage(), h='<div class="stack">', any=false;
-  for(var ri=S.rounds.length-1;ri>=0;ri--){
-    var rows=standings(ri); if(!rows) continue; any=true;
-    var mode=(ri===1&&sg.k==='final')?'final':(ri===0&&(sg.k==='cut'||S.rounds[0].cut))?'cut':'';
-    var done=doneSteps(ri), complete=mode!=='';
-    h+='<div class="stack"><div class="head"><h2>'+(mode==='final'?'Final standings':'Round '+(ri+1)+(complete?' standings':' after step '+done))+'</h2><span class="eyebrow">'+(ri===0?'Top 5 advance':'Top '+TOP+' win')+'</span></div>'+(mode==='final'?podiumHTML(rows):'')+standTable(rows,ri,mode)+byStep(rows,ri)+logHTML(ri)+'</div>';
-  }
-  if(!any) h+='<section class="panel"><p class="lead">Standings appear as soon as the first closing price is locked.</p></section>';
-  return h+'</div>';
+  var rows=standings();
+  if(!rows) return '<section class="panel"><p class="lead">Standings appear as soon as the first closing price is locked.</p></section>';
+  var done=doneSteps(), complete=stage().k==='final';
+  return '<div class="stack"><div class="stack"><div class="head"><h2>'+(complete?'Final standings':'Standings after day '+done)+'</h2></div>'+standTable(rows)+byStep(rows)+logHTML()+'</div></div>';
 }
 
 function ledgerRows(){
   var out=[];
-  S.rounds.forEach(function(R,ri){teamsOf(ri).forEach(function(t){hist(t,ri).rows.forEach(function(x){out.push({t:t,team:S.cfg.teams[t],x:x})})})});
-  return out.sort(function(a,b){return a.x.ri-b.x.ri||a.x.step-b.x.step||a.t-b.t});
+  allParticipants().forEach(function(t){hist(t).rows.forEach(function(x){out.push({t:t,person:S.cfg.participants[t],x:x})})});
+  return out.sort(function(a,b){return a.x.step-b.x.step||a.t-b.t});
 }
 function toCSV(){
-  var head=['Round','Step','Team','Stock','Opening Price (INR)','Closing Price (INR)','Decision','Quantity','Amount (INR)','Transaction Cost (INR)','Money Opening Balance (INR)','Money Closing Balance (INR)','Stocks Opening Balance (Shares)','Stocks Closing Balance (Shares)','Portfolio Value (INR)','Scenario','Reason','Locked At'];
+  var head=['Day','Participant','Stock','Opening Price (INR)','Closing Price (INR)','Decision','Quantity','Amount (INR)','Transaction Cost (INR)','Money Opening Balance (INR)','Money Closing Balance (INR)','Stocks Opening Balance (Shares)','Stocks Closing Balance (Shares)','Portfolio Value (INR)','Scenario','Reason','Locked At'];
   var q=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
   var lines=[head.join(',')];
-  ledgerRows().forEach(function(r){var x=r.x;lines.push([x.ri+1,x.step,r.team,sk(x.ri).sym,x.open,x.close==null?'':x.close,x.d,x.q,x.flow,x.fee,x.cashOpen,x.cashClose,x.shOpen,x.shClose,x.pv==null?'':x.pv,(x.scenario?x.scenario.h+'. '+x.scenario.d:''),x.why,new Date(x.at).toISOString()].map(q).join(','))});
+  ledgerRows().forEach(function(r){var x=r.x;lines.push([x.step,r.person,S.cfg.stock.sym,x.open,x.close==null?'':x.close,x.d,x.q,x.flow,x.fee,x.cashOpen,x.cashClose,x.shOpen,x.shClose,x.pv==null?'':x.pv,(x.scenario?x.scenario.h+'. '+x.scenario.d:''),x.why,new Date(x.at).toISOString()].map(q).join(','))});
   return lines.join('\n');
 }
 function ledgerHTML(){
-  if(!loaded||!S) return '<section class="panel"><p class="lead">The ledger fills in as teams lock their orders.</p></section>';
-  var rows=ledgerRows().filter(function(r){return (ui.fr==='all'||String(r.x.ri+1)===ui.fr)&&(ui.fs==='all'||String(r.x.step)===ui.fs)&&(ui.ft==='all'||String(r.t)===ui.ft)});
-  var ropt=['all','1','2'].map(function(v){return '<option value="'+v+'"'+(ui.fr===v?' selected':'')+'>'+(v==='all'?'Both rounds':'Round '+v)+'</option>'}).join('');
-  var sopt='<option value="all">All steps</option>'+[1,2,3,4,5,6,7,8,9,10].map(function(i){return '<option value="'+i+'"'+(ui.fs===String(i)?' selected':'')+'>Step '+i+'</option>'}).join('');
-  var topt='<option value="all">All teams</option>'+S.cfg.teams.map(function(n,i){return '<option value="'+i+'"'+(ui.ft===String(i)?' selected':'')+'>'+esc(n)+'</option>'}).join('');
+  if(!loaded||!S) return '<section class="panel"><p class="lead">The ledger fills in as participants lock their orders.</p></section>';
+  var rows=ledgerRows().filter(function(r){return (ui.fs==='all'||String(r.x.step)===ui.fs)&&(ui.ft==='all'||String(r.t)===ui.ft)});
+  var sopt='<option value="all">All days</option>'+Array.from({length:NSTEP},function(_,i){return i+1}).map(function(i){return '<option value="'+i+'"'+(ui.fs===String(i)?' selected':'')+'>Day '+i+'</option>'}).join('');
+  var topt='<option value="all">All participants</option>'+S.cfg.participants.map(function(n,i){return '<option value="'+i+'"'+(ui.ft===String(i)?' selected':'')+'>'+esc(n)+'</option>'}).join('');
   var body=rows.map(function(r){var x=r.x;
-    return '<tr><td>'+(x.ri+1)+'</td><td>'+x.step+'</td><td class="tn">'+esc(r.team)+'</td><td>'+esc(sk(x.ri).sym)+'</td><td class="n">'+inr(x.open)+'</td><td class="n">'+(x.close==null?'—':inr(x.close))+'</td><td><span class="tag '+(x.d==='Buy'?'good':x.d==='Sell'?'bad':'hold')+'">'+x.d+'</span></td><td class="n">'+num(x.q)+'</td><td class="n">'+(x.flow?sgn(x.flow):'0')+'</td><td class="n">'+inr(x.cashOpen)+'</td><td class="n">'+inr(x.cashClose)+'</td><td class="n">'+num(x.shOpen)+'</td><td class="n">'+num(x.shClose)+'</td><td class="n">'+(x.pv==null?'—':inr(x.pv))+'</td><td style="min-width:200px">'+esc(x.why)+'</td></tr>';
+    return '<tr><td>'+x.step+'</td><td class="tn">'+esc(r.person)+'</td><td>'+esc(S.cfg.stock.sym)+'</td><td class="n">'+inr(x.open)+'</td><td class="n">'+(x.close==null?'—':inr(x.close))+'</td><td><span class="tag '+(x.d==='Buy'?'good':x.d==='Sell'?'bad':'hold')+'">'+x.d+'</span></td><td class="n">'+num(x.q)+'</td><td class="n">'+(x.flow?sgn(x.flow):'0')+'</td><td class="n">'+inr(x.cashOpen)+'</td><td class="n">'+inr(x.cashClose)+'</td><td class="n">'+num(x.shOpen)+'</td><td class="n">'+num(x.shClose)+'</td><td class="n">'+(x.pv==null?'—':inr(x.pv))+'</td><td style="min-width:200px">'+esc(x.why)+'</td></tr>';
   }).join('');
-  var table=rows.length?'<div class="scroll"><table class="tbl"><thead><tr><th>Round</th><th>Step</th><th>Team</th><th>Stock</th><th class="n">Opening price</th><th class="n">Closing price</th><th>Decision</th><th class="n">Quantity</th><th class="n">Amount</th><th class="n">Money open</th><th class="n">Money close</th><th class="n">Shares open</th><th class="n">Shares close</th><th class="n">Portfolio value</th><th>Reason</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<p class="note">No locked orders match this filter yet.</p>';
+  var table=rows.length?'<div class="scroll"><table class="tbl"><thead><tr><th>Day</th><th>Participant</th><th>Stock</th><th class="n">Opening price</th><th class="n">Closing price</th><th>Decision</th><th class="n">Quantity</th><th class="n">Amount</th><th class="n">Money open</th><th class="n">Money close</th><th class="n">Shares open</th><th class="n">Shares close</th><th class="n">Portfolio value</th><th>Reason</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<p class="note">No locked orders match this filter yet.</p>';
   var acts=dl?'<button class="btn pri" data-act="csv">Download CSV</button>':'<button class="btn pri" data-act="copycsv">Copy CSV</button>';
   return '<div class="stack"><div class="head"><h2>Decision ledger</h2><span class="eyebrow">'+rows.length+' locked rows</span></div>'
     +'<p class="lead">Every Buy, Sell and Hold in the same columns as the assignment sheet. Amount is negative for a Buy and positive for a Sell.</p>'
-    +'<div class="actions"><div style="min-width:130px"><label class="lbl" for="fr">Round</label><select id="fr" data-flt="fr">'+ropt+'</select></div><div style="min-width:130px"><label class="lbl" for="fs">Step</label><select id="fs" data-flt="fs">'+sopt+'</select></div><div style="min-width:150px"><label class="lbl" for="ft">Team</label><select id="ft" data-flt="ft">'+topt+'</select></div><div style="align-self:flex-end">'+acts+'</div></div>'
+    +'<div class="actions"><div style="min-width:130px"><label class="lbl" for="fs">Day</label><select id="fs" data-flt="fs">'+sopt+'</select></div><div style="min-width:150px"><label class="lbl" for="ft">Participant</label><select id="ft" data-flt="ft">'+topt+'</select></div><div style="align-self:flex-end">'+acts+'</div></div>'
     +'<p class="msg" id="msg" role="status"></p>'+table+(ui.csv?'<textarea id="csvbox" readonly aria-label="CSV text">'+esc(ui.csv)+'</textarea>':'')+'</div>';
 }
 function rulesHTML(){
   var c=S?S.cfg:{capital:100000,cost:0};
   var costTxt=(c.cost*100).toFixed(2).replace(/\.?0+$/,'')||'0';
-  var h='<div class="stack"><h2>How the game runs</h2><div class="cols"><div class="panel"><h3>Two rounds</h3><dl class="rules">'
-    +'<dt>Round 1 · 9 teams</dt><dd>One stock ('+(S?esc(sk(0).sym):'ICICI Bank')+'), '+NSTEP[0]+' steps. After the last closing price the top 5 portfolios go through and the other 4 teams are eliminated. Ties go to higher cash, then lower team number.</dd>'
-    +'<dt>Round 2 · 5 teams</dt><dd>A new stock ('+(S?esc(sk(1).sym):'Cipla')+'), '+NSTEP[1]+' steps, and a fresh start with the same capital. After the last closing price the top 3 portfolios take 1st, 2nd and 3rd.</dd>'
-    +'<dt>Every step</dt><dd>1. The instructor starts the step. The scenario and the opening price appear for everyone. The opening price is the previous closing price. The scenario says what happened, and the teams decide whether the price will go up or down.<br>2. Each team picks Buy, Sell or Hold and a quantity, then locks. Trades happen at the opening price.<br>3. The instructor closes trading. The closing price is worked out automatically from the scenario and shown to everyone, and portfolios are valued at it.<br>4. Cash and shares carry into the next step.</dd></dl></div>'
-    +'<div class="panel"><h3>What cannot be edited</h3><ul><li>Team names, stocks, starting prices, capital and cost rate, after the game starts.</li><li>Scenarios and price moves, after the game starts. Opening and closing prices cannot be typed or changed.</li><li>A team’s order, after it locks it.</li><li>The list of finalists, after the cut is announced.</li></ul><p class="lead" style="margin-top:10px">Every lock button asks for a second tap, so a stray touch cannot commit anything.</p></div></div>'
+  var h='<div class="stack"><h2>How the game runs</h2><div class="cols"><div class="panel"><h3>One round</h3><dl class="rules">'
+    +'<dt>One stock, '+NSTEP+' days</dt><dd>'+(S?esc(S.cfg.stock.sym):'Cipla')+', traded over '+NSTEP+' days with a fresh start for every participant. At the end, everyone is ranked by final portfolio value. Ties go to higher cash, then whoever was added first.</dd>'
+    +'<dt>Every day</dt><dd>1. The instructor starts the day. The scenario and the opening price appear for everyone. The opening price is the previous closing price. The scenario says what happened, and each participant decides whether the price will go up or down.<br>2. Each participant picks Buy, Sell or Hold and a quantity, then locks. Trades happen at the opening price.<br>3. The instructor closes trading. The closing price is worked out automatically from the scenario and shown to everyone, and portfolios are valued at it.<br>4. Cash and shares carry into the next day.</dd></dl></div>'
+    +'<div class="panel"><h3>What cannot be edited</h3><ul><li>The participant list, the stock, starting price, capital and cost rate, after the game starts.</li><li>Scenarios and price moves, after the game starts. Opening and closing prices cannot be typed or changed.</li><li>A participant’s order, after they lock it.</li></ul><p class="lead" style="margin-top:10px">Every lock button asks for a second tap, so a stray touch cannot commit anything.</p></div></div>'
     +'<div class="panel stack"><h3>Calculations</h3><div class="formula">Amount = Quantity × Opening price<br>Cost = Amount × '+costTxt+'%, on every Buy and every Sell<br>Closing cash = Opening cash − Purchase + Sale − Cost<br>Closing shares = Opening shares + Bought − Sold<br>Portfolio value = Closing cash + Closing shares × Closing price<br>Profit / loss = Portfolio value − '+inr(c.capital)+'<br>Return = Profit / loss ÷ '+inr(c.capital)+' × 100</div>'
     +'<ul><li>A Buy cannot cost more than the cash on hand, cost included.</li><li>A Sell cannot be larger than the shares held.</li></ul></div>'
     +'<div class="panel stack"><div><h3>Practice on a real simulator first</h3><p class="lead">These platforms use virtual money only. Try one before game day, then compare it with this game in your report. Check their account and class limits first.</p></div>'
@@ -598,13 +561,13 @@ function say(text,ok){var e=document.getElementById('msg');if(e){e.textContent=t
 function precheck(act,b){
   if(act==='lock-orders'){
     var t0=+b.dataset.t;
-    if(!canWrite&&!(canTrade()&&t0===myTeam)) return 'This view is read-only.';
-    var sg=stage(),h=hist(t0,sg.ri),x=apply(S.rounds[sg.ri].steps[sg.i].open,h.cash,h.sh,getDraft(sg.ri,sg.i,t0),S.cfg.cost);return x.status==='ok'?null:'Fix the order before locking: '+x.status+'.'
+    if(!canWrite&&!(canTrade()&&t0===myPerson)) return 'This view is read-only.';
+    var sg=stage(),h=hist(t0),x=apply(S.steps[sg.i].open,h.cash,h.sh,getDraft(sg.i,t0),S.cfg.cost);return x.status==='ok'?null:'Fix the order before locking: '+x.status+'.'
   }
   if(!canWrite) return 'This view is read-only.';
   if(act==='start'){var r=readSetup();return r.error||null}
   if(act==='start-step'||act==='close-trading'){
-    var g=stage(); if(!SCRIPT||!SCRIPT[g.ri]||!SCRIPT[g.ri][g.i]) return 'The scenario script is not loaded in this browser.';
+    var g=stage(); if(!SCRIPT||!SCRIPT[g.i]) return 'The scenario script is not loaded in this browser.';
     return null;
   }
   return null;
@@ -615,43 +578,51 @@ function run(act,b){
   if(act==='host-login'){
     var inp=document.getElementById('hp'), v=inp?inp.value:'';
     if(v!==HOST_PASS){say('Wrong passphrase.');return}
-    setHost(); canWrite=true; ui.hostOpen=false; clearMyTeam();
+    setHost(); canWrite=true; ui.hostOpen=false; clearMyPerson();
     setSync(mode==='db'?'live':'local'); render();
     if(mode==='db'&&DB){loadScript().then(render);}
     return;
   }
-  if(act==='pick-team'){if(!canWrite&&teamsOf(stage().ri).indexOf(+b.dataset.t)>=0){setMyTeam(+b.dataset.t);render()}return}
-  if(act==='switch-team'){clearMyTeam();render();return}
+  if(act==='add-participant'){
+    var inp2=document.getElementById('pname'), nm=inp2?inp2.value.trim():'';
+    if(!nm){say('Enter a name first.');return}
+    if(drafts.setup.participants.some(function(x){return x.toLowerCase()===nm.toLowerCase()})){say('That name is already on the list.');return}
+    drafts.setup.participants.push(nm); saveDrafts();
+    if(inp2) inp2.value='';
+    say(''); render(); return;
+  }
+  if(act==='remove-participant'){
+    var ri=+b.dataset.t; drafts.setup.participants.splice(ri,1); saveDrafts(); render(); return;
+  }
+  if(act==='pick-team'){if(!canWrite){setMyPerson(+b.dataset.t);render()}return}
+  if(act==='switch-team'){clearMyPerson();render();return}
   if(act==='sel'){if(canWrite){ui.sel=+b.dataset.t;render()}return}
   if(act==='csv'){doCsv();return}
   if(act==='copycsv'){copyCsv();return}
   if(act==='start'){startGame(readSetup());return}
   if(act==='reset'){
-    drafts={setup:{},open:{},close:{},orders:{}}; saveDrafts(); ui.sel=null; SCRIPT=null;
+    drafts={setup:{participants:[]},orders:{}}; saveDrafts(); ui.sel=null; SCRIPT=null;
     try{localStorage.removeItem(LS_SCRIPT)}catch(e){}
     if(DB){try{DB.doc(SDOC).delete()}catch(e){}}
     commit(function(){return null});location.hash='#play';return;
   }
-  var sg=stage(), ri=sg.ri, i=sg.i, K=ri+':'+i;
+  var sg=stage(), i=sg.i;
   if(act==='start-step'){
-    var sc=SCRIPT&&SCRIPT[ri]&&SCRIPT[ri][i]; if(!sc){say('The scenario script is not loaded in this browser.');return}
+    var sc=SCRIPT&&SCRIPT[i]; if(!sc){say('The scenario script is not loaded in this browser.');return}
     ui.sel=null;
-    commit(function(s){var R0=s.rounds[ri];var open=i===0?s.cfg.base[ri]:R0.steps[i-1].close;R0.steps.push({open:open,scenario:{h:sc.h,d:sc.d},openAt:Date.now(),orders:{},closed:false,closedAt:0,close:null,closeAt:0});return s});return;
+    commit(function(s){var open=i===0?s.cfg.base:s.steps[i-1].close;s.steps.push({open:open,scenario:{h:sc.h,d:sc.d},openAt:Date.now(),orders:{},closed:false,closedAt:0,close:null,closeAt:0});return s});return;
   }
   if(act==='lock-orders'){
-    var t=+b.dataset.t; if(!canWrite&&t!==myTeam) return;
-    var d=getDraft(ri,i,t), row={d:d.d,q:d.d==='Hold'?0:Math.floor(Number(d.q)),why:String(d.why||'').trim().slice(0,140)};
-    delete drafts.orders[K+':'+t]; saveDrafts();
-    commit(function(s){s.rounds[ri].steps[i].orders[t]={row:row,at:Date.now()};return s});
-    var tm=teamsOf(ri); for(var k=0;k<tm.length;k++){if(!S.rounds[ri].steps[i].orders[tm[k]]){ui.sel=tm[k];break}}
+    var t=+b.dataset.t; if(!canWrite&&t!==myPerson) return;
+    var d=getDraft(i,t), row={d:d.d,q:d.d==='Hold'?0:Math.floor(Number(d.q)),why:String(d.why||'').trim().slice(0,140)};
+    delete drafts.orders[i+':'+t]; saveDrafts();
+    commit(function(s){s.steps[i].orders[t]={row:row,at:Date.now()};return s});
+    var tm=allParticipants(); for(var k=0;k<tm.length;k++){if(!S.steps[i].orders[tm[k]]){ui.sel=tm[k];break}}
     render();return;
   }
   if(act==='close-trading'){
-    var tms=teamsOf(ri), sc2=SCRIPT&&SCRIPT[ri]&&SCRIPT[ri][i]; if(!sc2){say('The scenario script is not loaded in this browser.');return}
-    commit(function(s){var st=s.rounds[ri].steps[i];tms.forEach(function(t){if(!st.orders[t]){st.orders[t]={row:{d:'Hold',q:0,why:''},at:Date.now(),auto:true}}});st.closed=true;st.closedAt=Date.now();st.close=r2(st.open*(1+sc2.pct/100));st.closeAt=Date.now();return s});return;
-  }
-  if(act==='announce'){
-    commit(function(s){var st=standings0(s);s.rounds[0].cut={adv:st.slice(0,ADV),out:st.slice(ADV),at:Date.now()};s.rounds.push({steps:[],cut:null});return s});ui.sel=null;render();return;
+    var tms=allParticipants(), sc2=SCRIPT&&SCRIPT[i]; if(!sc2){say('The scenario script is not loaded in this browser.');return}
+    commit(function(s){var st=s.steps[i];tms.forEach(function(t){if(!st.orders[t]){st.orders[t]={row:{d:'Hold',q:0,why:''},at:Date.now(),auto:true}}});st.closed=true;st.closedAt=Date.now();st.close=r2(st.open*(1+sc2.pct/100));st.closeAt=Date.now();return s});return;
   }
 }
 async function startGame(r){
@@ -660,10 +631,7 @@ async function startGame(r){
   if(mode==='db'){
     try{await DB.doc(SDOC).set({script:r.script})}catch(e){SCRIPT=null;console.error('Firestore write to secret/script failed:',e);say('Could not save the scenario script ('+(e&&e.code||e&&e.message||'see browser console')+'). Try again.');return}
   }else lsSet(LS_SCRIPT,{script:r.script});
-  commit(function(){return {v:5,cfg:r.cfg,rounds:[{steps:[],cut:null}]}});
-}
-function standings0(s){
-  var keep=S; S=s; var r=standings(0).map(function(x){return x.t}); S=keep; return r;
+  commit(function(){return {v:6,cfg:r.cfg,steps:[]}});
 }
 async function doCsv(){
   var text='﻿'+toCSV();
@@ -691,8 +659,8 @@ app.addEventListener('click',function(e){
 });
 function refreshTicket(){
   var sg=stage(), t=ui.sel; if(sg.k!=='trade'||t==null) return;
-  var st=S.rounds[sg.ri].steps[sg.i]; if(st.orders[t]) return;
-  var h=hist(t,sg.ri), row=getDraft(sg.ri,sg.i,t), x=apply(st.open,h.cash,h.sh,row,S.cfg.cost);
+  var st=S.steps[sg.i]; if(st.orders[t]) return;
+  var h=hist(t), row=getDraft(sg.i,t), x=apply(st.open,h.cash,h.sh,row,S.cfg.cost);
   var c=document.getElementById('calc'); if(c) c.innerHTML=calcHTML(x);
   var q=document.getElementById('q'); if(q) q.disabled=row.d==='Hold';
   var ca=document.getElementById('cashafter'); if(ca) ca.textContent=inr(x.cashClose);
@@ -702,16 +670,20 @@ app.addEventListener('input',function(e){
   var el=e.target;
   if(el.hasAttribute('data-sf')){drafts.setup[el.id]=el.value;saveDrafts();return}
   if(el.hasAttribute('data-qty')||el.hasAttribute('data-why')){
-    var sg2=stage(), d=getDraft(sg2.ri,sg2.i,ui.sel);
+    var sg2=stage(), d=getDraft(sg2.i,ui.sel);
     if(el.hasAttribute('data-qty')) d.q=el.value.replace(/[^0-9.]/g,''); else d.why=el.value;
     saveDrafts(); refreshTicket(); return;
   }
   if(el.id==='rst'){var rb=document.getElementById('rstbtn');if(rb)rb.disabled=el.value!=='RESET'}
+  if(el.id==='pname'){return}
+});
+app.addEventListener('keydown',function(e){
+  if(e.target&&e.target.id==='pname'&&e.key==='Enter'){e.preventDefault();run('add-participant',e.target)}
 });
 app.addEventListener('change',function(e){
   var el=e.target;
   if(el.hasAttribute('data-dec')){
-    var sg=stage(), d=getDraft(sg.ri,sg.i,ui.sel); d.d=el.value; if(el.value==='Hold') d.q=''; saveDrafts(); refreshTicket();
+    var sg=stage(), d=getDraft(sg.i,ui.sel); d.d=el.value; if(el.value==='Hold') d.q=''; saveDrafts(); refreshTicket();
     if(el.value!=='Hold'){var q=document.getElementById('q');if(q)q.focus()}
     return;
   }
@@ -756,5 +728,3 @@ async function init(){
 init();
 })();
 </script>
-
-</body></html>
