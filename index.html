@@ -198,9 +198,9 @@ var LS_STATE='dsd-state-v5', LS_DRAFT='dsd-drafts-v5', LS_SCRIPT='dsd-script-v5'
 /* ---------- deployment config: fill these in before deploying ---------- */
 // 1. Create a free Firebase project at https://console.firebase.google.com,
 //    enable Firestore, register a Web App, and paste its config below.
-var FIREBASE_CONFIG={apiKey:"AIzaSyDc-fLz_bzFKgKQ2Nz0V5paOc1lDWNNd8E",authDomain:"stock-market-simulator-5bcfc.firebaseapp.com",projectId:"stock-market-simulator-5bcfc",storageBucket:"stock-market-simulator-5bcfc.firebasestorage.app",messagingSenderId:"125357419986",appId:"1:125357419986:web:74125d2e305ddb6920ec0b"};
+var FIREBASE_CONFIG={apiKey:"REPLACE_ME",authDomain:"REPLACE_ME.firebaseapp.com",projectId:"REPLACE_ME",storageBucket:"REPLACE_ME.appspot.com",messagingSenderId:"REPLACE_ME",appId:"REPLACE_ME"};
 // 2. Pick the passphrase the instructor types once per browser to get write access.
-var HOST_PASS="yeshashm528";
+var HOST_PASS="derby-falcon-42";
 var DEF={"rounds": [{"stock": {"sym": "ICICIBANK", "name": "ICICI Bank"}, "base": 1250, "steps": [{"h": "Markets open steady, loan growth looks healthy", "d": "Banking stocks trade calmly ahead of quarterly results. Analysts expect the bank to report steady loan growth and stable margins.", "pct": 4}, {"h": "Large corporate borrower defaults on its loans", "d": "News breaks that a big corporate borrower has missed repayments. The bank says it will set aside extra money to cover possible losses.", "pct": -6}, {"h": "Record quarterly profit and a special dividend", "d": "The bank reports its highest ever profit, with bad loans at a multi-year low. The board announces a special dividend for shareholders.", "pct": 18}, {"h": "Regulator restricts new credit card customers", "d": "The regulator finds compliance lapses and bars the bank from signing up new credit card customers until they are fixed.", "pct": -15}, {"h": "Government announces a large infrastructure plan", "d": "A big spending plan on roads, ports and housing is announced. Banks expect strong demand for new loans over the next year.", "pct": 9}, {"h": "Foreign investors sell Indian bank stocks", "d": "Rising US bond yields pull money out of emerging markets. Foreign investors sell banking shares across the board.", "pct": -8}, {"h": "New digital banking app signs millions of users", "d": "The bank launches a new app that adds millions of customers in weeks and cuts its running costs. Brokerages raise their targets.", "pct": 12}, {"h": "Festival season lifts retail loan demand", "d": "Home, car and personal loan applications jump during the festival season. The bank reports its best ever month for new loans.", "pct": 6}]}, {"stock": {"sym": "CIPLA", "name": "Cipla"}, "base": 1500, "steps": [{"h": "Seasonal demand for breathing medicines picks up", "d": "Cold weather and pollution raise demand for inhalers and respiratory drugs, which are among the company's biggest products.", "pct": 3}, {"h": "US regulator approves a complex generic inhaler", "d": "The USFDA clears the company's generic inhaler for the American market, where few rivals can match it. Analysts expect large sales.", "pct": 16}, {"h": "US inspectors flag problems at a key plant", "d": "A USFDA inspection of an important factory ends with serious observations. Shipments from the plant to the US may be delayed.", "pct": -12}, {"h": "Strong sales of long-term therapy medicines at home", "d": "Medicines for diabetes, heart and breathing problems sell well in India. The company says its domestic business grew faster than the market.", "pct": 7}, {"h": "Government cuts prices of essential medicines", "d": "The price regulator lowers the maximum price of several widely used drugs, including some the company sells in large volumes.", "pct": -15}, {"h": "A rival's patent expires and the company launches first", "d": "A blockbuster drug loses patent protection. The company is among the first to launch a cheaper generic and wins big orders.", "pct": 10}, {"h": "Raw material prices spike after supply disruption", "d": "A disruption in key supplier countries pushes up the cost of the chemicals used to make medicines. Profit margins are expected to shrink.", "pct": -9}, {"h": "Positive trial results for a new treatment", "d": "A new treatment the company has been developing succeeds in late-stage trials and a partner offers to fund its launch.", "pct": 18}, {"h": "US generic drug prices fall again", "d": "Large American buyers push for lower prices on generic medicines. Analysts cut profit forecasts for Indian drug makers.", "pct": -7}, {"h": "Quarterly results beat expectations", "d": "Profit and sales come in above forecasts across India, the US and Africa. Management raises its outlook for the year.", "pct": 5}]}]};
 var NSTEP=[8,10], ADV=5, TOP=3;
 function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
@@ -658,7 +658,7 @@ async function startGame(r){
   if(r.error){say(r.error);return}
   SCRIPT=r.script;
   if(mode==='db'){
-    try{await DB.doc(SDOC).set({script:r.script})}catch(e){SCRIPT=null;say('Could not save the scenario script. Try again.');return}
+    try{await DB.doc(SDOC).set({script:r.script})}catch(e){SCRIPT=null;console.error('Firestore write to secret/script failed:',e);say('Could not save the scenario script ('+(e&&e.code||e&&e.message||'see browser console')+'). Try again.');return}
   }else lsSet(LS_SCRIPT,{script:r.script});
   commit(function(){return {v:5,cfg:r.cfg,rounds:[{steps:[],cut:null}]}});
 }
@@ -723,7 +723,7 @@ window.addEventListener('hashchange',render);
 /* ---------- boot ---------- */
 async function loadScript(){
   if(mode!=='db'||!DB) return;
-  try{var sn=await DB.doc(SDOC).get();if(sn.exists)SCRIPT=sn.data().script}catch(e){}
+  try{var sn=await DB.doc(SDOC).get();if(sn.exists)SCRIPT=sn.data().script}catch(e){console.error('Firestore read of secret/script failed:',e)}
 }
 async function init(){
   render();
