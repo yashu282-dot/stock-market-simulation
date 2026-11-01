@@ -222,6 +222,11 @@ var drafts=lsGet(LS_DRAFT)||{};
 ['setup','orders'].forEach(function(k){drafts[k]=drafts[k]||{}});
 if(!Array.isArray(drafts.setup.participants)) drafts.setup.participants=[];
 function saveDrafts(){lsSet(LS_DRAFT,drafts)}
+function addParticipantName(nm){
+  nm=String(nm||'').trim(); if(!nm) return {error:null,skipped:true};
+  if(drafts.setup.participants.some(function(x){return x.toLowerCase()===nm.toLowerCase()})) return {error:'That name is already on the list.'};
+  drafts.setup.participants.push(nm); return {ok:true};
+}
 function tab(){var h=location.hash.slice(1);return ({play:1,board:1,ledger:1,rules:1})[h]?h:'play'}
 
 /* ---------- game maths ---------- */
@@ -355,10 +360,31 @@ function setupHTML(){
     +'<div><label class="lbl" for="cost">Transaction cost per trade (%)</label><input id="cost" data-sf inputmode="decimal" autocomplete="off" value="'+val('cost','0')+'"></div></div>'
     +'<div><h3>How prices work</h3><p class="lead">Each day has a scenario with a price move. The opening price is the previous closing price (day 1 uses the starting price). Participants only see the scenario text. When you close trading, the closing price is worked out from the hidden move and shown to everyone. The moves are kept private to the instructor until then.</p></div>'
     +stockRows(val)
-    +'<div><h3>Participants</h3><p class="lead">Add each participant by name. The list locks when the game starts.</p></div>'
+    +'<div><h3>Participants</h3><p class="lead">Add each participant by name, or upload a CSV with one name per line. The list locks when the game starts.</p></div>'
     +plistWrap
     +'<div class="grid"><div><label class="lbl" for="pname">Participant name</label><input id="pname" autocomplete="off" maxlength="24" placeholder="e.g. Asha Rao"></div><div style="align-self:flex-end"><button class="btn" data-act="add-participant" type="button">Add participant</button></div></div>'
+    +'<div class="grid"><div><label class="lbl" for="pcsv">Or upload a CSV (one name per line)</label><input id="pcsv" type="file" accept=".csv,text/csv,text/plain"></div></div>'
     +'<p class="msg" id="msg" role="alert"></p><div class="actions"><button class="btn pri" data-act="start" data-confirm="Tap again to lock setup for good">Start the game</button></div></section>';
+}
+function importParticipantsCSV(inputEl){
+  var file=inputEl.files&&inputEl.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(){
+    var lines=String(reader.result||'').split(/\r\n|\r|\n/).map(function(l){return l.trim()}).filter(function(l){return l});
+    var added=0, dupes=0;
+    lines.forEach(function(l){
+      // Accept a plain name per line, or the first column of a simple CSV row.
+      var nm=l.split(',')[0].replace(/^"|"$/g,'').trim();
+      if(!nm) return;
+      var r=addParticipantName(nm);
+      if(r.ok) added++; else if(r.error) dupes++;
+    });
+    saveDrafts();
+    render();
+    say(added?('Added '+added+' participant'+(added===1?'':'s')+(dupes?' ('+dupes+' duplicate name'+(dupes===1?'':'s')+' skipped)':'')+'.'):('No new names found in that file.'+(dupes?' All '+dupes+' were already on the list.':'')),added>0);
+  };
+  reader.onerror=function(){say('Could not read that file. Try again.')};
+  reader.readAsText(file);
 }
 function readSetup(){
   var v=function(id){var e=document.getElementById(id);return e?e.value.trim():''};
@@ -436,15 +462,16 @@ function ticketHTML(i,t){
 }
 function tradingHTML(i){
   var st=S.steps[i], teams=allParticipants(), n=teams.length, done=teams.filter(function(t){return st.orders[t]}).length;
+  var prev=i>0?priceStrip(i-1):'';
   if(!canWrite&&canTrade()){
     var mt=myPerson;
-    return '<div class="stack">'+priceStrip(i)+'<div class="panel stack"><div class="head"><h3>Order desk · day '+(i+1)+'</h3><span class="mono" style="font-size:13px">'+done+' of '+n+' locked</span></div>'
+    return '<div class="stack">'+prev+priceStrip(i)+'<div class="panel stack"><div class="head"><h3>Order desk · day '+(i+1)+'</h3><span class="mono" style="font-size:13px">'+done+' of '+n+' locked</span></div>'
       +'<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+n+'" aria-valuenow="'+done+'"><i style="width:'+(done/n*100)+'%"></i></div>'+ticketHTML(i,mt)+histTable(mt)+'</div></div>';
   }
   if(ui.sel==null||teams.indexOf(ui.sel)<0){var f=teams.filter(function(t){return !st.orders[t]})[0];ui.sel=f!=null?f:teams[0]}
   var btns=teams.map(function(t){var o=st.orders[t];return '<button class="tm'+(o?' done':'')+(t===ui.sel?' sel':'')+'" data-act="sel" data-t="'+t+'"><b>'+esc(S.cfg.participants[t])+'</b><span>'+(o?(o.auto?'Auto-hold':'Locked '+clock(o.at)):'Not locked')+'</span></button>'}).join('');
   var close=canWrite?'<div class="actions"><button class="btn pri" data-act="close-trading" data-confirm="Tap again to close trading and reveal the closing price"'+(SCRIPT?'':' disabled')+'>Close trading and reveal closing price</button><span class="eyebrow">Anyone who has not locked is recorded as Hold</span></div>':'';
-  return '<div class="stack">'+priceStrip(i)+'<div class="panel stack"><div class="head"><h3>Order desk · day '+(i+1)+'</h3><span class="mono" style="font-size:13px">'+done+' of '+n+' locked</span></div>'
+  return '<div class="stack">'+prev+priceStrip(i)+'<div class="panel stack"><div class="head"><h3>Order desk · day '+(i+1)+'</h3><span class="mono" style="font-size:13px">'+done+' of '+n+' locked</span></div>'
     +'<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+n+'" aria-valuenow="'+done+'"><i style="width:'+(done/n*100)+'%"></i></div><div class="teams">'+btns+'</div>'+ticketHTML(i,ui.sel)+histTable(ui.sel)+close+'</div></div>';
 }
 
@@ -590,10 +617,9 @@ function run(act,b){
   if(act==='add-participant'){
     var inp2=document.getElementById('pname'), nm=inp2?inp2.value.trim():'';
     if(!nm){say('Enter a name first.');return}
-    if(drafts.setup.participants.some(function(x){return x.toLowerCase()===nm.toLowerCase()})){say('That name is already on the list.');return}
-    drafts.setup.participants.push(nm); saveDrafts();
+    var r=addParticipantName(nm); if(r.error){say(r.error);return}
     if(inp2) inp2.value='';
-    say(''); render(); return;
+    saveDrafts(); say(''); render(); return;
   }
   if(act==='remove-participant'){
     var ri=+b.dataset.t; drafts.setup.participants.splice(ri,1); saveDrafts(); render(); return;
@@ -693,6 +719,7 @@ app.addEventListener('change',function(e){
   }
   if(el.dataset.flt){ui[el.dataset.flt]=el.value;render()}
   if(el.hasAttribute('data-sf')){drafts.setup[el.id]=el.value;saveDrafts()}
+  if(el.id==='pcsv'){importParticipantsCSV(el);return}
 });
 window.addEventListener('hashchange',render);
 
