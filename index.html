@@ -307,7 +307,7 @@ function headHTML(){
   }
   var t=tab();
   var links=[['play','Play'],['board','Leaderboard'],['ledger','Ledger'],['rules','Rules']].map(function(x){return '<a href="#'+x[0]+'"'+(t===x[0]?' aria-current="page"':'')+'>'+x[1]+'</a>'}).join('');
-  var who=(!canWrite&&canTrade()&&S)?'<span class="pill">Playing as '+esc(S.cfg.participants[myPerson])+' · <a href="#" data-act="switch-team" style="color:inherit">switch</a></span>':'';
+  var who=(!canWrite&&canTrade()&&S)?'<span class="pill">Playing as '+esc(S.cfg.participants[myPerson])+'</span>':'';
   return '<header class="top"><div><h1>Dalal Street Derby</h1><p class="eyebrow">One stock, '+NSTEP+' days · every entry locks for good</p></div><span class="pill" id="sync">'+syncLabel()+'</span>'+who+'</header>'
     +rt+'<div class="steps" style="grid-template-columns:repeat('+N+',minmax(0,1fr))" role="group" aria-label="Trading days">'+cells+'</div><nav class="tabs" aria-label="Sections">'+links+'</nav>';
 }
@@ -594,8 +594,7 @@ function run(act,b){
   if(act==='remove-participant'){
     var ri=+b.dataset.t; drafts.setup.participants.splice(ri,1); saveDrafts(); render(); return;
   }
-  if(act==='pick-team'){if(!canWrite){setMyPerson(+b.dataset.t);render()}return}
-  if(act==='switch-team'){clearMyPerson();render();return}
+  if(act==='pick-team'){if(!canWrite&&!canTrade()){setMyPerson(+b.dataset.t);render()}return}
   if(act==='sel'){if(canWrite){ui.sel=+b.dataset.t;render()}return}
   if(act==='csv'){doCsv();return}
   if(act==='copycsv'){copyCsv();return}
@@ -657,8 +656,9 @@ app.addEventListener('click',function(e){
   }
   run(act,b);
 });
+function ticketOwner(){return canWrite?ui.sel:myPerson}
 function refreshTicket(){
-  var sg=stage(), t=ui.sel; if(sg.k!=='trade'||t==null) return;
+  var sg=stage(), t=ticketOwner(); if(sg.k!=='trade'||t==null) return;
   var st=S.steps[sg.i]; if(st.orders[t]) return;
   var h=hist(t), row=getDraft(sg.i,t), x=apply(st.open,h.cash,h.sh,row,S.cfg.cost);
   var c=document.getElementById('calc'); if(c) c.innerHTML=calcHTML(x);
@@ -670,7 +670,7 @@ app.addEventListener('input',function(e){
   var el=e.target;
   if(el.hasAttribute('data-sf')){drafts.setup[el.id]=el.value;saveDrafts();return}
   if(el.hasAttribute('data-qty')||el.hasAttribute('data-why')){
-    var sg2=stage(), d=getDraft(sg2.i,ui.sel);
+    var sg2=stage(), d=getDraft(sg2.i,ticketOwner());
     if(el.hasAttribute('data-qty')) d.q=el.value.replace(/[^0-9.]/g,''); else d.why=el.value;
     saveDrafts(); refreshTicket(); return;
   }
@@ -683,7 +683,7 @@ app.addEventListener('keydown',function(e){
 app.addEventListener('change',function(e){
   var el=e.target;
   if(el.hasAttribute('data-dec')){
-    var sg=stage(), d=getDraft(sg.i,ui.sel); d.d=el.value; if(el.value==='Hold') d.q=''; saveDrafts(); refreshTicket();
+    var sg=stage(), d=getDraft(sg.i,ticketOwner()); d.d=el.value; if(el.value==='Hold') d.q=''; saveDrafts(); refreshTicket();
     if(el.value!=='Hold'){var q=document.getElementById('q');if(q)q.focus()}
     return;
   }
