@@ -729,11 +729,12 @@ async function init(){
   render();
   var fbOk=false;
   try{
-    if(window.firebase&&FIREBASE_CONFIG&&FIREBASE_CONFIG.apiKey&&FIREBASE_CONFIG.apiKey!=='REPLACE_ME'){
-      firebase.initializeApp(FIREBASE_CONFIG);
-      DB=firebase.firestore(); fbOk=true;
-    }
-  }catch(e){fbOk=false}
+    if(!window.firebase||typeof firebase.initializeApp!=='function') throw new Error('Firebase SDK did not load (window.firebase missing)');
+    if(typeof firebase.firestore!=='function') throw new Error('Firestore SDK did not load (firebase.firestore missing)');
+    if(!FIREBASE_CONFIG||!FIREBASE_CONFIG.apiKey||FIREBASE_CONFIG.apiKey==='REPLACE_ME') throw new Error('FIREBASE_CONFIG is not filled in');
+    firebase.initializeApp(FIREBASE_CONFIG);
+    DB=firebase.firestore(); fbOk=true;
+  }catch(e){fbOk=false;console.error('Firebase init failed, falling back to local-only mode:',e)}
   if(fbOk){
     mode='db'; dbRef=DB.doc(DOC);
     canWrite=isHost;
